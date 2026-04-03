@@ -1,14 +1,18 @@
-import express from "express"
-import{createUser,deleteUser,getUsers, updateUSer} from "../controllers/userController.js"
-import { authUser,auth } from "../middleware/auth.js"
+import express from "express";
+import { auth } from "../middleware/authMiddleware.js";
+import { allowRoles } from "../middleware/roleMiddleware.js";
+import {
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser
+} from "../controllers/userController.js";
 
-const router=express.Router()
+const router = express.Router();
 
-router.post("/",authUser,auth("admin"),createUser)
-router.get("/",authUser,auth("admin"),getUsers)
-router.put("/:id",auth("admin"),updateUSer)
-router.delete("/:id",auth("admin"),deleteUser)
+router.get("/", auth, allowRoles("admin"), getUsers);
+router.post("/", auth, allowRoles("admin"), createUser);
+router.put("/:id", auth, allowRoles("admin"), updateUser);
+router.delete("/:id", auth, allowRoles("admin"), deleteUser);
 
-
-
-export default router
+export default router;

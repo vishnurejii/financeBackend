@@ -1,14 +1,14 @@
 import express from "express";
-import { createRecord,getRecords,updateRecord,deleteRecord } from "../controllers/recordController.js";
-import { authUser,auth } from "../middleware/auth.js";
+import { auth } from "../middleware/authMiddleware.js";
+import { allowRoles } from "../middleware/roleMiddleware.js";
+import { validateRecord } from "../middleware/validateMiddleware.js";
+import * as rc from "../controllers/recordController.js";
 
-const router=express.Router()
+const router = express.Router();
 
-router.use(authUser)
+router.post("/", auth, allowRoles("admin"), validateRecord, rc.createRecord);
+router.get("/", auth, allowRoles("admin", "analyst"), rc.getRecords);
+router.put("/:id", auth, allowRoles("admin"), rc.updateRecord);
+router.delete("/:id", auth, allowRoles("admin"), rc.deleteRecord);
 
-router.post("/",auth("admin"),createRecord)
-router.get("/",auth("customer","analyst","admin"),getRecords)
-router.put("/:id",auth("admin"),updateRecord)
-router.delete("/:id",auth("admin"),deleteRecord)
-
-export default router
+export default router;

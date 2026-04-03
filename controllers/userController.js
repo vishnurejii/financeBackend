@@ -1,35 +1,39 @@
-import bcrypt from "bcryptjs"
-import userModel from "../models/User.js"
+import User from "../models/User.js";
+import bcrypt from "bcryptjs";
 
-export const createUser=async(req,res)=>{
-    const{name,email,password,role}=req.body
+export const getUsers = async (req, res) => {
+  const users = await User.find().select("-password");
+  res.json(users);
+};
 
-    const hashedPassword=await bcrypt.hash(password,10)
+export const createUser = async (req, res) => {
+  const { name, email, password, role } = req.body;
 
-    const user=await userModel.create({
-        name,
-        email,
-        password:hashedPassword,
-        role
-    })
-    res.json(user)
-}
+  const hashed = await bcrypt.hash(password, 10);
 
-export const getUsers=async(req,res)=>{
-    const users=await userModel.find().select("-password")
-    res.json(users)
-}
+  const user = await User.create({
+    name,
+    email,
+    password: hashed,
+    role
+  });
 
-export const updateUSer=async(req,res)=>{
-    const user=await userModel.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        {new:true}
-    )
-    res.json(user)
-}
+  res.json(user);
+};
 
-export const deleteUser=async(req,res)=>{
-    await userModel.findByIdAndDelete(req.params.id)
-    res.json({message:"deleted"})
-}
+export const updateUser = async (req, res) => {
+  const { role, isActive } = req.body;
+
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    { role, isActive },
+    { new: true }
+  );
+
+  res.json(user);
+};
+
+export const deleteUser = async (req, res) => {
+  await User.findByIdAndDelete(req.params.id);
+  res.json({ message: "User deleted" });
+};
