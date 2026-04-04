@@ -1,9 +1,10 @@
 import Record from "../models/Record.js";
 
-export const getSummary = async (req, res) => {
-  const match = { isDeleted: { $ne: true } };
+//get summery
+export const getSummary=async(req,res)=>{
+  const match={ isDeleted: { $ne: true } };
 
-  const summaryData = await Record.aggregate([
+  const summaryData=await Record.aggregate([
     { $match: match },
     {
       $group: {
@@ -13,7 +14,7 @@ export const getSummary = async (req, res) => {
     }
   ]);
 
-  const categoryData = await Record.aggregate([
+  const categoryData=await Record.aggregate([
     { $match: match },
     {
       $group: {
@@ -27,16 +28,16 @@ export const getSummary = async (req, res) => {
   let totalExpense = 0;
   
   summaryData.forEach(item => {
-      if (item._id === "income") totalIncome = item.total;
-      if (item._id === "expense") totalExpense = item.total;
+      if(item._id === "income") totalIncome=item.total;
+      if(item._id === "expense") totalExpense=item.total;
   });
 
-  const categories = {
+  const categories={
       income: {},
       expense: {}
   };
 
-  categoryData.forEach(item => {
+  categoryData.forEach(item =>{
       const type = item._id?.type;
       const cat = item._id?.category;
       if (type && cat) {

@@ -1,6 +1,6 @@
 import express from "express";
-import { auth } from "../middleware/authMiddleware.js";
-import { allowRoles } from "../middleware/roleMiddleware.js";
+import {auth} from "../middleware/authMiddleware.js";
+import {allowRoles} from "../middleware/roleMiddleware.js";
 import {
   getUsers,
   createUser,
@@ -8,7 +8,7 @@ import {
   deleteUser
 } from "../controllers/userController.js";
 
-const router = express.Router();
+const router=express.Router();
 
 router.get("/", auth, allowRoles("admin"), getUsers);
 router.post("/", auth, allowRoles("admin"), createUser);

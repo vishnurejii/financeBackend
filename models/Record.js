@@ -11,7 +11,7 @@ const recordSchema = new mongoose.Schema({
         enum:["income","expense"],
         required:[true,'type is required']
     },
-    category: String,
+category: String,
    date: {type: Date,
         required:[true,'Date is required'],
         default:Date.now 
